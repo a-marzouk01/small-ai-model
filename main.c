@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 int data[][2] = {
     {0, 0},
@@ -9,14 +8,10 @@ int data[][2] = {
     {2, 4},
     {3, 6},
     {4, 8},
-    {5, 1}
+    {5, 10}
 };
 
 #define train_size sizeof(data)/sizeof(data[0][0])
-
-float sigmoid_func(float sum) {
-    return 1 / (1 + exp(-sum));
-}
 
 float cost(float w) {
     float sum = 0;
@@ -33,7 +28,7 @@ float cost(float w) {
 }
 
 int main(int argc, char *argv[]) {
-    srand(time(0));
+    srand(69);
     float weight = (float)rand()/RAND_MAX;
 
     float eps = 1e-3;
