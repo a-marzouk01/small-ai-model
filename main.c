@@ -1,44 +1,49 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int data[][2] = {
-  {0, 0},
-  {1, 3},
-  {2, 6},
-  {3, 9},
-  {4, 12},
-  {5, 15}
+    {0, 0},
+    {1, 2},
+    {2, 4},
+    {3, 6},
+    {4, 8},
+    {5, 1}
 };
 
+#define train_size sizeof(data)/sizeof(data[0][0])
+
 float sigmoid_func(float sum) {
-  return 1 / (1 + exp(-sum));
+    return 1 / (1 + exp(-sum));
+}
+
+float cost(float w) {
+    float sum = 0;
+    for (int i = 0; i < train_size; i++) {
+        float x = data[i][0];
+        float y = data[i][1];
+        float prediction = x * w;
+        float error = y - prediction;
+        sum += error * error;
+    }
+    sum /= (float) train_size;
+
+    return sum;
 }
 
 int main(int argc, char *argv[]) {
-  srand(69);
+    srand(time(0));
+    float weight = (float)rand()/RAND_MAX;
 
-  float learning = 0.01;
+    float eps = 1e-3;
+    float rate = 1e-3;
 
-  float weight = (float)rand()/RAND_MAX;
-  float sum = 0;
-
-  for(int j = 0; j < 26; j++){
-    for (int i = 0; i < sizeof(data)/sizeof(data[0][0]); i++) {
-      float x = data[i][0];
-      float y = data[i][1];
-      float prediction = x * weight;
-
-      float error = y - prediction;
-
-      sum += y;
-      weight += learning * error * x;
+    float sum = 0;
+    for(int j = 0; j < 1000; j++){
+        float dweight = (cost(weight + eps) - cost(weight)) / eps;
+        weight -= rate * dweight;
+        printf("cost => %f\n", cost(weight));
     }
-  }
-
-  int input;
-  scanf("%d", &input);
-  float output = input * weight;
-  printf("%f", output);
-
+    printf("weight => %f\n", weight);
 }
