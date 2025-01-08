@@ -42,12 +42,14 @@ Modle initializer() {
     return m;
 }
 
-void forward(Modle m) {
+void initialize_weights(Modle m) {
     mat_rand(m.w1);
     mat_rand(m.b1);
     mat_rand(m.w2);
     mat_rand(m.b2);
+}
 
+void forward(Modle m) {
     mat_product(m.a1, m.a0, m.w1);
     mat_sum(m.a1, m.b1);
     mat_sig(m.a1);
@@ -81,7 +83,20 @@ float cost(Modle m, Matrix in, Matrix expected) {
 int main() {
     srand(time(0));
     Modle m = initializer();
-
+    
+    initialize_weights(m);
+    
+    Matrix input = mat_init(train_size, 2);
+    Matrix expected = mat_init(train_size, 1);
+    
+    for (int i = 0; i < train_size; i++) {
+        index(input, i, 0) = train[i][0];
+        index(input, i, 1) = train[i][1];
+        index(expected, i, 0) = train[i][2];
+    }
+    
+    float c = cost(m, input, expected);
+    printf("Cost: %f\n", c);
 
     return 0;
 }
